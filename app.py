@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 
-tareas = [{"id": 1, "tarea": "Llamando a AWS", "hecho": False}]
+tareas = [{"id": 1, "tarea": "Llamando a AWService", "hecho": False}]
 
 @app.route('/')
 def home():
