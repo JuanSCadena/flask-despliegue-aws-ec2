@@ -51,33 +51,14 @@ jobs:
         source: "proyecto.tar.gz"
         target: "/home/ubuntu/"
 
-    # --- ETAPA 5: DEPLIEGE LIGERO (Optimizado para t2.micro) ---
+   # --- ETAPA 5: DEPLOY (Estrategia Script Local) ---
     - name: Etapa 5 - Desplegar
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST_DNS }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        command_timeout: 10m
+        command_timeout: 4m
         script: |
-          echo "1. Deteniendo contenedor anterior..."
-          pkill -f "python3 app.py" || true
-          
-          echo "2. Descomprimiendo archivos..."
-          cd /home/ubuntu/
-          tar -xzf proyecto.tar.gz
-          
-          echo "3. Verificando entorno virtual..."
-          if [ ! -d "entorno" ]; then
-            python3 -m venv entorno
-            echo "Entorno creado."
-          fi
-          
-          echo "4. Instalando librerias de Python..."
-          ./entorno/bin/pip install -r requirements.txt
-          
-          echo "5. Encendiendo servidor..."
-          # El 'sleep 1' final es vital para que nohup se separe correctamente del proceso SSH
-          nohup ./entorno/bin/python3 app.py > /dev/null 2>&1 &
-          sleep 5
-          echo "¡Despliegue terminado!"
+          # Solo le decimos: "Corre el script que ya tienes guardado"
+          bash /home/ubuntu/deploy.sh
